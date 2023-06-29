@@ -1,11 +1,10 @@
-"use client";
-import userService from "@/app/services/userService";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { useNavigation } from "react-router-dom";
+import userService from "../../services/userService";
 
 const DropdownHeader = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const router = useRouter();
+  // const router = useNavigation()
   const options = ["Sign out"];
 
   const toggleDropdown = () => {
@@ -14,7 +13,7 @@ const DropdownHeader = () => {
 
   const handleLogout = () => {
     userService.logout();
-    router.push('/')
+    // router.push('/')
   };
 
   return (

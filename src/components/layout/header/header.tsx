@@ -1,5 +1,5 @@
 import { AppBar, Toolbar, IconButton, Typography, Avatar } from "@mui/material";
-
+import MenuIcon from '@mui/icons-material/Menu';
 import styles from "./header.module.scss";
 import DropdownHeader from "../../dropdown/dropdown-header";
 
@@ -24,7 +24,7 @@ const Header = ({ handleMenuToggle }: any) => {
             </div>
 
             <div className="flex">
-              <Avatar sx={{ bgcolor: deepOrange[500] }}>N</Avatar>
+              <Avatar>N</Avatar>
               <DropdownHeader />
             </div>
           </div>

@@ -14,9 +14,9 @@ const Dashboard = () => {
   });
   
   const getData = async (token: string) => {
-    const data = await dashboardService.fetchDashboard(token);
-    setDashboard({ category: data.categories, wallpapers: data.wallpapers });
-    console.log(data);
+    // const data = await dashboardService.fetchDashboard(token);
+    // setDashboard({ category: data.categories, wallpapers: data.wallpapers });
+    // console.log(data);
   };
 
   useEffect(() => {

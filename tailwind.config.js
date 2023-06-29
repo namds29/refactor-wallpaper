@@ -6,4 +6,5 @@ export default {
     ...colors
   },
   plugins: [],
+  corePlugins: { preflight: false, },
 };

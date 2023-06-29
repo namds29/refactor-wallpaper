@@ -1,9 +1,8 @@
 import { FC } from "react";
 import LoginForm from "./login-form";
 
-interface pagesProps {}
 
-const LoginPage: FC<pagesProps> = ({}) => {
+const LoginPage: FC = () => {
   return (
       <LoginForm />
   );
