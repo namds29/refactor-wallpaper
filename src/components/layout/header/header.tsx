@@ -1,5 +1,5 @@
 import { AppBar, Toolbar, IconButton, Typography, Avatar } from "@mui/material";
-import MenuIcon from '@mui/icons-material/Menu';
+import MenuIcon from "@mui/icons-material/Menu";
 import styles from "./header.module.scss";
 import DropdownHeader from "../../dropdown/dropdown-header";
 
@@ -19,7 +19,7 @@ const Header = ({ handleMenuToggle }: any) => {
                 <MenuIcon />
               </IconButton>
               <Typography variant="h6" className={styles.title}>
-                My Gallery
+                Finger Front End
               </Typography>
             </div>
 

@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import styles from "./login-form.module.scss";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
@@ -15,7 +15,7 @@ const LoginForm = () => {
     handleSubmit,
     // formState: { errors },
   } = useForm<User>();
-  // const [errorMsg, setErrorMsg] = useState(false);
+  const [errorMsg, setErrorMsg] = useState(false);
   const navigate = useNavigate();
   const onSubmit: SubmitHandler<User> = async ({
     username,
@@ -23,24 +23,30 @@ const LoginForm = () => {
   }: User) => {
     try {
       const res = await userService.login(username, sha256(password));
-      if (res?.message === 'success') {
-        localStorage.setItem("token", res.access_token);
-        navigate("/sale");
+      console.log(res);
+
+      if (res?.message === "success") {
+        localStorage.setItem("token", res.data.access_token);
+        navigate("/dashboard");
       }
     } catch (error: any) {
-      if (error.response.status === 401) {
-        // setErrorMsg(true);
+      if (error) {
+        setErrorMsg(true);
       }
       console.log(error);
     }
   };
 
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
   useEffect(() => {}, [navigate]);
   return (
     <div className={styles.container}>
-      <h2>Login</h2>
+      <p className="text-2xl font-bold">Login</p>
       <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
+        {errorMsg && (
+          <p className="text-red-500 text-center py-4">
+            Your username or password is incorrect
+          </p>
+        )}
         <div className={styles.formGroup}>
           <label htmlFor="username">Username</label>
           <input

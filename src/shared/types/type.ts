@@ -25,34 +25,3 @@ export type CategoryResponse = {
     priority: number;
     totalWallpaper: number;
   };
-
-export type Wallpaper = {
-    id: number,
-    thumb: {
-      file_name: string;
-      path: string;
-    };
-    content_one: {
-      file_name: string;
-      path: string;
-    },
-    category_id: {
-      id: number,
-      name: string
-    }
-    name: string;
-    // setup: number;
-    tag: string;
-    downloadCount: number;
-    trendingPriority: number;
-    priority: number,
-    priceType: {
-      id: number,
-      type: string
-    };
-    priorityCategory: number,
-    priorityNewest: number;
-    time: string,
-    author: string,
-    website: string,
-  };

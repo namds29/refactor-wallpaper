@@ -1,33 +1,34 @@
 import { FC, useState, useContext, useEffect } from "react";
+import { useFetchAnimations } from "../../../hooks/useAnimations";
 import { parseDate } from "../../../shared/utils/parseDate";
-import { WallpaperContext } from "../context/wallpaper-context";
-import { WallpaperDetail } from "../../../shared/types/wallpapers-type";
-import ModalEditWallpaper from "./modal-edit-wallpaper";
+import { AnimationContext } from "../context/animation-context";
+import ModalEditAnimation from "./modal-edit-animations";
+import { AnimationDetail } from "../../../shared/types/animation-types";
 
 interface Props {}
 
-const FetchWallpaper: FC<Props> = ({}) => {
-  const { wallpapers, searchByName } = useContext(WallpaperContext);
+const FetchAnimations: FC<Props> = ({}) => {
+  const { animations, searchByName } = useContext(AnimationContext);
   // console.log(animations.);
   // searchByName.
   const [isOpenEdit, setIsOpenEdit] = useState(false);
-  const [wallpaperDetail, setWallpaperDetail] = useState<
-    WallpaperDetail | undefined
+  const [animationDetail, setAnimationDetail] = useState<
+    AnimationDetail | undefined
   >();
   const [isCreateSuccess, setIsUpdateSuccess] = useState(false);
 
   const handleClose = () => setIsOpenEdit(false);
-  const handleEdit = (wallpaper: any) => {
+  const handleEdit = (animation: any) => {
     setIsOpenEdit(true);
-    setWallpaperDetail(wallpaper);
-    console.log("detail", wallpaper);
+    setAnimationDetail(animation);
+    console.log("detail", animation);
   };
 
   return (
     <>
       <div className="grid grid-cols-4 mt-5 gap-5 overflow-y-auto max-h-[calc(100vh-200px-130px)] pr-4">
-        {wallpapers &&
-          wallpapers
+        {animations &&
+          animations
             .filter((item: any) =>
               item.name.toLowerCase().includes(searchByName.toLowerCase())
             )
@@ -70,15 +71,15 @@ const FetchWallpaper: FC<Props> = ({}) => {
       </div>
 
       {isOpenEdit && (
-        <ModalEditWallpaper
+        <ModalEditAnimation
           setIsUpdateSuccess={setIsUpdateSuccess}
           isOpenEdit={isOpenEdit}
           handleClose={handleClose}
-          wallpaperDetail={wallpaperDetail}
+          animationDetail={animationDetail}
         />
       )}
     </>
   );
 };
 
-export default FetchWallpaper;
+export default FetchAnimations;

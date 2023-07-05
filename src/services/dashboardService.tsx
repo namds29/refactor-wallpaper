@@ -12,7 +12,7 @@ async function fetchDashboard(token: string) {
   let config = {
     method: "get",
     maxBodyLength: Infinity,
-    url: process.env.NEXT_PUBLIC_API_URL + "dashboard",
+    url: import.meta.env.VITE_API_URL + "dashboard",
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -30,7 +30,7 @@ const updateWallpaper = async (token: string, category: UpdateCategory) => {
 
   let config = {
     method: "post",
-    url: process.env.NEXT_PUBLIC_API_URL + "updateCategory",
+    url: import.meta.env.VITE_API_URL + "updateCategory",
     headers: {
       Authorization: `Bearer ${token}`,
     },

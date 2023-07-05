@@ -5,69 +5,55 @@ import {
   Select,
   SelectChangeEvent,
 } from "@mui/material";
-import { FC, useContext } from "react";
+import { FC, useContext} from "react";
+import { AnimationContext } from "../context/animation-context";
 import {
   sortByDatePropertyAsc,
   sortByNumericPropertyAsc,
 } from "../../../shared/utils/sort";
-
+import { Animations } from "../../../shared/types/animation-types";
 import { useForm } from "react-hook-form";
-import { WallpaperContext } from "../context/wallpaper-context";
-import { WallpaperDetail } from "../../../shared/types/wallpapers-type";
 
 interface Props {}
 
 const FilterAnimation: FC<Props> = ({}) => {
-  const { wallpapers, setWallpapers, setSearchByName } =
-    useContext(WallpaperContext);
+  const { animations, setAnimations, setSearchByName } = useContext(AnimationContext);
   const { register } = useForm();
 
   const searchByName = (e: any) => {
     const value = e.target.value;
-    setSearchByName(value);
+    setSearchByName(value)
   };
 
   const handleChange = (event: SelectChangeEvent) => {
     console.log(event.target.value);
     const value = event.target.value;
-    let sortedWallpapers: WallpaperDetail[] = [];
+    let sortedAnimations: Animations[] = [];
 
     switch (value) {
       case "asc_createdAt":
-        sortedWallpapers = sortByDatePropertyAsc(wallpapers, "createdAt");
+        sortedAnimations = sortByDatePropertyAsc(animations, "createdAt");
         break;
       case "desc_createdAt":
-        sortedWallpapers = sortByDatePropertyAsc(
-          wallpapers,
+        sortedAnimations = sortByDatePropertyAsc(
+          animations,
           "createdAt"
         ).reverse();
         break;
       case "asc_priority":
-        sortedWallpapers = sortByNumericPropertyAsc(wallpapers, "priority");
+        sortedAnimations = sortByNumericPropertyAsc(animations, "priority");
         break;
       case "desc_priority":
-        sortedWallpapers = sortByNumericPropertyAsc(
-          wallpapers,
+        sortedAnimations = sortByNumericPropertyAsc(
+          animations,
           "priority"
         ).reverse();
-        break;
-      case "asc_downloadCount":
-        sortedWallpapers = sortByNumericPropertyAsc(
-          wallpapers,
-          "downloadCount"
-        );
-        break;
-      case "desc_downloadCount":
-        sortedWallpapers = sortByNumericPropertyAsc(
-          wallpapers,
-          "downloadCount"
-        ).reverse();
-
         break;
       default:
         break;
     }
-    setWallpapers([...sortedWallpapers]);
+
+    setAnimations([...sortedAnimations]);
   };
   return (
     <>
@@ -129,33 +115,6 @@ const FilterAnimation: FC<Props> = ({}) => {
                 <em>Ascending </em>
               </MenuItem>
               <MenuItem value="desc_priority">
-                <em>Descending </em>
-              </MenuItem>
-            </Select>
-          </FormControl>
-          <FormControl fullWidth>
-            <InputLabel
-              sx={{
-                color: "white",
-                top: "-10px",
-                left: "-15px",
-                fontSize: "1.2rem",
-              }}
-              id="downloadCount"
-            >
-              Sort by Download:
-            </InputLabel>
-            <Select
-              sx={{ backgroundColor: "white", height: 40 }}
-              labelId="downloadCount"
-              id="downloadCount"
-              defaultValue="asc_downloadCount"
-              onChange={handleChange}
-            >
-              <MenuItem value="asc_downloadCount">
-                <em>Ascending </em>
-              </MenuItem>
-              <MenuItem value="desc_downloadCount">
                 <em>Descending </em>
               </MenuItem>
             </Select>
