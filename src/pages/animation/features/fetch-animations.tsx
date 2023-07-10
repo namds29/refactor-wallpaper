@@ -1,5 +1,4 @@
-import { FC, useState, useContext, useEffect } from "react";
-import { useFetchAnimations } from "../../../hooks/useAnimations";
+import { FC, useState, useContext } from "react";
 import { parseDate } from "../../../shared/utils/parseDate";
 import { AnimationContext } from "../context/animation-context";
 import ModalEditAnimation from "./modal-edit-animations";
@@ -9,8 +8,6 @@ interface Props {}
 
 const FetchAnimations: FC<Props> = ({}) => {
   const { animations, searchByName } = useContext(AnimationContext);
-  // console.log(animations.);
-  // searchByName.
   const [isOpenEdit, setIsOpenEdit] = useState(false);
   const [animationDetail, setAnimationDetail] = useState<
     AnimationDetail | undefined
@@ -21,7 +18,6 @@ const FetchAnimations: FC<Props> = ({}) => {
   const handleEdit = (animation: any) => {
     setIsOpenEdit(true);
     setAnimationDetail(animation);
-    console.log("detail", animation);
   };
 
   return (
@@ -46,7 +42,8 @@ const FetchAnimations: FC<Props> = ({}) => {
                     alt="Pic 1"
                     style={{
                       width: "100%",
-                      objectFit: "cover",
+                      objectFit: "contain",
+                      background: 'black',
                       borderRadius: 5,
                       height: "100%",
                     }}

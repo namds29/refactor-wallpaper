@@ -27,6 +27,18 @@ const fetchAnimations = async () => {
     },
   };
   const res = await axios.request(config);
+  return res;
+};
+const fetchListAnimations = async () => {
+  const token = localStorage.getItem("token");
+  let config = {
+    method: "get",
+    url: import.meta.env.VITE_API_URL + "animations/list",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+  const res = await axios.request(config);
   return res.data;
 };
 
@@ -90,9 +102,24 @@ const deleteAnimation = async (id: number) => {
   const res = await axios.request(config);
   return res;
 };
+const getDetailAnimation = async (id: number) => {
+  const token = localStorage.getItem("token");
+  let config = {
+    method: "get",
 
+    url: import.meta.env.VITE_API_URL + "animations/"+ id,
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+      Authorization: `Bearer ${token}`,
+    },
+  };
+  const res = await axios.request(config);
+  return res.data;
+};
 export default {
   fetchAnimations,
+  fetchListAnimations,
+  getDetailAnimation,
   createAnimation,
   updateAnimation,
   deleteAnimation,

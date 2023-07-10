@@ -1,9 +1,12 @@
 import { Box, Modal } from "@mui/material";
-import { Dispatch, FC, SetStateAction, useState } from "react";
+import { Dispatch, FC, SetStateAction, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useQueryClient } from "@tanstack/react-query";
 import { Spin } from "antd";
+
+import themeService from "../../../services/theme-service";
 import wallpaperService from "../../../services/wallpaper-service";
+import animationService from "../../../services/animation-service";
 
 interface Props {
   open: boolean;
@@ -21,58 +24,70 @@ const style = {
   p: 4,
   borderRadius: 2,
 };
-const ModalCreateWallpaper: FC<Props> = ({
+const ModalCreateTheme: FC<Props> = ({
   open,
   handleClose,
   setIsCreateSuccess,
 }: Props) => {
-  const {
-    register,
-    handleSubmit,
-  } = useForm();
-  const [avatar, setAvatar] = useState<File | null>(null);
-  const [content, setContent] = useState<File | null>(null);
+  const { register, handleSubmit } = useForm();
   const [isLoading, setIsLoading] = useState(false);
-  const [previewImageAvatar, setPreviewImageAvatar] = useState<string | null>(
-    null
-  );
-  const [previewImageContent, setPreviewImageContent] = useState<string | null>(
-    null
-  );
+  const [listWallpaper, setListWallpaper] = useState<any>([]);
+  const [listAnimation, setListAnimation] = useState<any>([]);
+  const [previewImageWallpaper, setPreviewImageWallpaper] = useState<
+    string | null
+  >(null);
+  const [previewImageAnimation, setPreviewImageAnimation] = useState<
+    string | null
+  >(null);
   const queryClient = useQueryClient();
+
+  const fetchListWallpapers = async () => {
+    const res = await wallpaperService.fetchListWallpapers();
+    setListWallpaper(res);
+  };
+  const fetchListAnimations = async () => {
+    const res = await animationService.fetchListAnimations();
+
+    setListAnimation(res);
+  };
 
   const onSubmit = async (data: any) => {
     const form = {
       name: data.name,
       priority: data.priority,
-      contentType: 1,
-      avatar: data.avatar,
-      contentFile: data.content,
+      wallpaperID: data.wallpaperID,
+      animationID: data.animationID,
     };
     setIsLoading(true);
-    const res = await wallpaperService.createWallpaper(form);
+    try {
+      const res = await themeService.createTheme(form);
 
-    if (res.status === 200) {
-      setIsLoading(false);
-      handleClose();
-      setIsCreateSuccess(true);
-      alert("Create success");
-      queryClient.invalidateQueries(["wallpapers"]);
-    }else{
+      if (res.status === 200) {
+        setIsLoading(false);
+        handleClose();
+        setIsCreateSuccess(true);
+        alert("Create success");
+        queryClient.invalidateQueries(["themes"]);
+      }
+    } catch (error) {
       setIsLoading(false);
       alert("Create fail!");
     }
   };
-  const handlePhotoAvatarChange = (e: any) => {
-    const file = e.target.files[0];
-    setAvatar(file);
-    setPreviewImageAvatar(URL.createObjectURL(file));
+  const showWallpaperImg = async (e: any) => {
+    const id = Number(e.target.value);
+    const res = await wallpaperService.getDetailWallpapers(id);
+    setPreviewImageWallpaper(res.avatar.path);
   };
-  const handlePhotoContentChange = (e: any) => {
-    const file = e.target.files[0];
-    setContent(file);
-    setPreviewImageContent(URL.createObjectURL(file));
+  const showAnimationImg = async (e: any) => {
+    const id = Number(e.target.value);
+    const res = await animationService.getDetailAnimation(id);
+    setPreviewImageAnimation(res.avatar.path);
   };
+  useEffect(() => {
+    fetchListWallpapers();
+    fetchListAnimations();
+  }, []);
   return (
     // {!isLoading && }
 
@@ -83,9 +98,7 @@ const ModalCreateWallpaper: FC<Props> = ({
       aria-describedby="parent-modal-description"
     >
       <Box sx={{ ...style, width: "fit-content" }}>
-        <div className="text-2xl mb-6 font-bold text-center">
-          Create Wallpaper
-        </div>
+        <div className="text-2xl mb-6 font-bold text-center">Create Theme</div>
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="mb-4">
             <label htmlFor="name" className="block mb-1 font-medium">
@@ -114,53 +127,71 @@ const ModalCreateWallpaper: FC<Props> = ({
               defaultValue={1}
             />
           </div>
-          <div className="flex mb-4 gap-5">
+          <div className="flex justify-between mb-4 gap-5">
             <div>
-              <label htmlFor="photo" className="block mb-1 font-medium">
-                Avatar*:
+              <label htmlFor="Wallpaper" className="block mb-1 font-medium">
+                Wallpaper*:
               </label>
-              <input
-                type="file"
-                id="photo"
-                accept="image/*"
-                // className="hidden"
-                {...register("avatar", {
-                  onChange: handlePhotoAvatarChange,
+              <select
+                className="w-full cursor-pointer px-2 py-1 bg-gray-200 rounded"
+                id="Wallpaper"
+                defaultValue={""}
+                {...register("wallpaperID", {
+                  onChange: (e) => showWallpaperImg(e),
                 })}
-              />
+              >
+                <option value="" disabled>
+                  Select wallpaper
+                </option>
+                {listWallpaper &&
+                  listWallpaper.map((item: any) => (
+                    <option key={"wallpaper " + item.id} value={item.id}>
+                      Name: {item.name}/ ID: {item.id}
+                    </option>
+                  ))}
+              </select>
             </div>
             <div>
-              <label htmlFor="content" className="block mb-1 font-medium">
-                Content*:
+              <label htmlFor="animation" className="block mb-1 font-medium">
+                Animation*:
               </label>
-              <input
-                type="file"
-                id="content"
-                accept="image/*"
-                // className="hidden"
-                {...register("content", {
-                  onChange: handlePhotoContentChange,
+              <select
+                className="w-full cursor-pointer px-2 py-1 bg-gray-200 rounded"
+                id="animation"
+                defaultValue={""}
+                {...register("animationID", {
+                  onChange: (e) => showAnimationImg(e),
                 })}
-              />
+              >
+                <option value="" disabled>
+                  Select animation
+                </option>
+                {listAnimation &&
+                  listAnimation.map((item: any) => (
+                    <option key={"wallpaper " + item.id} value={item.id}>
+                      Name: {item.name}/ ID: {item.id}
+                    </option>
+                  ))}
+              </select>
             </div>
           </div>
           <div className="flex gap-5">
-            {previewImageAvatar && (
+            {previewImageWallpaper && (
               <div className="mb-6 w-1/2">
                 <div className="relative w-full h-96 bg-gray-200 rounded">
                   <img
-                    src={previewImageAvatar}
+                    src={previewImageWallpaper}
                     alt="Selected"
                     className="h-full object-contain mb-2"
                   />
                 </div>
               </div>
             )}
-            {previewImageContent && (
+            {previewImageAnimation && (
               <div className="mb-6 w-1/2">
                 <div className="relative w-full h-96 bg-gray-200 rounded">
                   <img
-                    src={previewImageContent}
+                    src={previewImageAnimation}
                     alt="Selected"
                     className="h-full object-contain mb-2"
                   />
@@ -202,4 +233,4 @@ const ModalCreateWallpaper: FC<Props> = ({
   );
 };
 
-export default ModalCreateWallpaper;
+export default ModalCreateTheme;

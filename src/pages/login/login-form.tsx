@@ -3,7 +3,7 @@ import styles from "./login-form.module.scss";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { sha256 } from "js-sha256";
-import userService from "../../services/userService";
+import userService from "../../services/user-service";
 
 const LoginForm = () => {
   type User = {
@@ -23,8 +23,6 @@ const LoginForm = () => {
   }: User) => {
     try {
       const res = await userService.login(username, sha256(password));
-      console.log(res);
-
       if (res?.message === "success") {
         localStorage.setItem("token", res.data.access_token);
         navigate("/dashboard");

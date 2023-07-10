@@ -29,7 +29,6 @@ const ModalCreateAnimation: FC<Props> = ({
   const {
     register,
     handleSubmit,
-    formState: { errors },
   } = useForm();
   const [avatar, setAvatar] = useState<File | null>(null);
   const [content, setContent] = useState<File | null>(null);
@@ -50,11 +49,8 @@ const ModalCreateAnimation: FC<Props> = ({
       avatar: data.avatar,
       contentFile: data.content,
     };
-    console.log(form);
     setIsLoading(true);
     const res = await animationService.createAnimation(form);
-    console.log(res);
-
     if (res.status === 200) {
       setIsLoading(false);
       handleClose();
@@ -151,7 +147,7 @@ const ModalCreateAnimation: FC<Props> = ({
                   <img
                     src={previewImageAvatar}
                     alt="Selected"
-                    className="h-full object-cover mb-2"
+                    className="h-full object-contain mb-2"
                   />
                 </div>
               </div>
@@ -162,7 +158,7 @@ const ModalCreateAnimation: FC<Props> = ({
                   <img
                     src={previewImageContent}
                     alt="Selected"
-                    className="h-full object-cover mb-2"
+                    className="h-full object-contain mb-2"
                   />
                 </div>
               </div>

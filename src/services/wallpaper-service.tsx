@@ -20,7 +20,7 @@ const fetchWallpapers = async () => {
     },
   };
   const res = await axios.request(config);
-  return res.data;
+  return res;
 };
 async function createWallpaper(wallpaper: CreateWallpaper) {
   const token = localStorage.getItem("token");
@@ -47,7 +47,6 @@ const deleteWallpapers = async (id: number) => {
   const token = localStorage.getItem("token");
   let config = {
     method: "delete",
-
     url: import.meta.env.VITE_API_URL + "wallpapers",
     headers: {
       "Content-Type": "application/x-www-form-urlencoded",
@@ -58,5 +57,38 @@ const deleteWallpapers = async (id: number) => {
   const res = await axios.request(config);
   return res;
 };
+const getDetailWallpapers = async (id: number) => {
+  const token = localStorage.getItem("token");
+  let config = {
+    method: "get",
 
-export default { fetchWallpapers, createWallpaper, deleteWallpapers };
+    url: import.meta.env.VITE_API_URL + "wallpapers/" + id,
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+      Authorization: `Bearer ${token}`,
+    },
+  };
+  const res = await axios.request(config);
+  return res.data;
+};
+
+const fetchListWallpapers = async () => {
+  const token = localStorage.getItem("token");
+  let config = {
+    method: "get",
+    url: import.meta.env.VITE_API_URL + "wallpapers/list",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+  const res = await axios.request(config);
+  return res.data;
+};
+
+export default {
+  fetchWallpapers,
+  fetchListWallpapers,
+  getDetailWallpapers,
+  createWallpaper,
+  deleteWallpapers,
+};

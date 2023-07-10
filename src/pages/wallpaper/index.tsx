@@ -1,5 +1,5 @@
 
-import { FC, useEffect, useState } from "react";
+import { FC, useState } from "react";
 import FilterWallpaper from "./features/filter-wallpaper";
 import FetchWallpaper from "./features/fetch-wallpaper";
 import { WallpaperProvider } from "./context/wallpaper-context";
@@ -22,7 +22,7 @@ const Wallpapers: FC<pageProps> = ({}) => {
             className="rounded px-4 py-3 bg-blue-500 "
             onClick={handleOpen}
           >
-            + Add Animation
+            + Add Wallpaper
           </button>
         </div>
         {open && (

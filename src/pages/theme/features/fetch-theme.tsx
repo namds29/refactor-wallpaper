@@ -1,30 +1,28 @@
 import { FC, useState, useContext } from "react";
-import { parseDate } from "../../../shared/utils/parseDate";
-import { WallpaperContext } from "../context/wallpaper-context";
-import { WallpaperDetail } from "../../../shared/types/wallpapers-type";
-import ModalEditWallpaper from "./modal-edit-wallpaper";
 
+import { ThemeContext } from "../context/theme-context";
+import { parseDate } from "../../../shared/utils/parseDate";
+import ModalEditTheme from "./modal-edit-theme";
 interface Props {}
 
-const FetchWallpaper: FC<Props> = ({}) => {
-  const { wallpapers, searchByName } = useContext(WallpaperContext);
+const FetchTheme: FC<Props> = ({}) => {
+  const { themes, searchByName } = useContext(ThemeContext);
+
   const [isOpenEdit, setIsOpenEdit] = useState(false);
-  const [wallpaperDetail, setWallpaperDetail] = useState<
-    WallpaperDetail | undefined
-  >();
+  const [themeDetail, setThemeDetail] = useState<any>();
   const [isCreateSuccess, setIsUpdateSuccess] = useState(false);
 
   const handleClose = () => setIsOpenEdit(false);
-  const handleEdit = (wallpaper: any) => {
+  const handleEdit = (theme: any) => {
     setIsOpenEdit(true);
-    setWallpaperDetail(wallpaper);
+    setThemeDetail(theme);
   };
 
   return (
     <>
       <div className="grid grid-cols-4 mt-5 gap-5 overflow-y-auto max-h-[calc(100vh-200px-130px)] pr-4">
-        {wallpapers &&
-          wallpapers
+        {themes &&
+          themes
             .filter((item: any) =>
               item.name.toLowerCase().includes(searchByName.toLowerCase())
             )
@@ -34,28 +32,26 @@ const FetchWallpaper: FC<Props> = ({}) => {
                 className="bg-primary rounded w-full p-5 relative"
               >
                 <div
-                  className="relative w-full h-80 cursor-pointer"
+                  className="relative flex justify-center w-full bg-black h-80 cursor-pointer"
                   onClick={() => handleEdit(item)}
                 >
                   <img
-                    src={item.avatar.path}
-                    alt="Pic 1"
-                    style={{
-                      width: "100%",
-                      objectFit: "contain",
-                      background: 'black',
-                      borderRadius: 5,
-                      height: "100%",
-                    }}
+                    className="w-full h-full object-contain"
+                    src={item.wallpaper.avatar.path}
+                    alt={item.name}
                   />
+                  <div className="absolute bg-black bottom-3 h-24 w-24">
+                    <img
+                      className="w-full h-full object-contain"
+                      src={item.animation.avatar.path}
+                      alt={item.name}
+                    />
+                  </div>
                 </div>
                 <div className="flex justify-between mt-4 mb-2">
                   <p className="whitespace-nowrap overflow-hidden overflow-ellipsis w-24">
                     {item.name}
                   </p>
-                </div>
-                <div className="mt-3 text-gray-500 text-sm">
-                  Download: {item.downloadCount}
                 </div>
                 <div className="mt-3 text-gray-500 text-sm">
                   Priority: {item.priority}
@@ -68,15 +64,15 @@ const FetchWallpaper: FC<Props> = ({}) => {
       </div>
 
       {isOpenEdit && (
-        <ModalEditWallpaper
+        <ModalEditTheme
           setIsUpdateSuccess={setIsUpdateSuccess}
           isOpenEdit={isOpenEdit}
           handleClose={handleClose}
-          wallpaperDetail={wallpaperDetail}
+          themeDetail={themeDetail}
         />
       )}
     </>
   );
 };
 
-export default FetchWallpaper;
+export default FetchTheme;

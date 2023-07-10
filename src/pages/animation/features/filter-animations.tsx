@@ -26,7 +26,6 @@ const FilterAnimation: FC<Props> = ({}) => {
   };
 
   const handleChange = (event: SelectChangeEvent) => {
-    console.log(event.target.value);
     const value = event.target.value;
     let sortedAnimations: Animations[] = [];
 

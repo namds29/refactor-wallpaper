@@ -37,11 +37,7 @@ const ModalEditAnimation: FC<Props> = ({
   setIsUpdateSuccess,
   animationDetail,
 }: Props) => {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm();
+  const { register, handleSubmit } = useForm();
 
   const [open, setOpen] = useState(false);
   const [avatarName, setAvatarName] = useState<string | undefined>(
@@ -67,15 +63,19 @@ const ModalEditAnimation: FC<Props> = ({
     };
 
     if (animationDetail?.id !== undefined) {
-      const res = await animationService.updateAnimation(
-        animationDetail?.id,
-        form
-      );
-      if (res.status === 200) {
-        handleClose();
-        setIsUpdateSuccess(true);
-        alert("Update success");
-        queryClient.invalidateQueries(["animations"]);
+      try {
+        const res = await animationService.updateAnimation(
+          animationDetail?.id,
+          form
+        );
+        if (res.status === 200) {
+          handleClose();
+          setIsUpdateSuccess(true);
+          alert("Update success");
+          queryClient.invalidateQueries(["animations"]);
+        }
+      } catch (error) {
+        alert("Update fail!");
       }
     }
   };
@@ -91,20 +91,18 @@ const ModalEditAnimation: FC<Props> = ({
     setContentName(file.name);
     setPreviewImageContent(URL.createObjectURL(file));
   };
-  const handleClickOpenPopup = () => {
-    setOpen(true);
-  };
-  const handleClosePopup = () => {
-    setOpen(false);
-  };
+
   const handleDelete = async () => {
     if (animationDetail?.id !== undefined) {
-      const res = await animationService.deleteAnimation(animationDetail.id);
-      console.log(res);
-      if (res.status === 200) {
-        handleClose();
-        alert("Delete success");
-        queryClient.invalidateQueries(["animations"]);
+      try {
+        const res = await animationService.deleteAnimation(animationDetail.id);
+        if (res.status === 200) {
+          handleClose();
+          alert("Delete success");
+          queryClient.invalidateQueries(["animations"]);
+        }
+      } catch (error) {
+        alert("Delete fail!");
       }
     }
   };
@@ -150,7 +148,7 @@ const ModalEditAnimation: FC<Props> = ({
                 defaultValue={animationDetail?.priority}
               />
             </div>
-            <div className="flex mb-4 gap-5">
+            <div className="flex justify-between mb-4 gap-5">
               <div>
                 <label htmlFor="photo" className="block mb-1 font-medium">
                   Avatar*:
@@ -197,7 +195,7 @@ const ModalEditAnimation: FC<Props> = ({
                     <img
                       src={previewImageAvatar}
                       alt="Selected"
-                      className="h-full object-cover mb-2"
+                      className="h-full object-contain mb-2"
                     />
                   </div>
                 </div>
@@ -208,7 +206,7 @@ const ModalEditAnimation: FC<Props> = ({
                     <img
                       src={previewImageContent}
                       alt="Selected"
-                      className="h-full object-cover mb-2"
+                      className="h-full object-contain mb-2"
                     />
                   </div>
                 </div>
@@ -219,7 +217,7 @@ const ModalEditAnimation: FC<Props> = ({
               <button
                 type="button"
                 className="bg-red-500 text-white px-4 py-2 mr-4 rounded-md"
-                onClick={handleClickOpenPopup}
+                onClick={handleDelete}
               >
                 Delete
               </button>
@@ -240,29 +238,6 @@ const ModalEditAnimation: FC<Props> = ({
           </form>
         </Box>
       </Modal>
-      <Dialog
-        open={open}
-        onClose={handleClosePopup}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <DialogTitle id="alert-dialog-title">
-          {"Are you sure want to delete this?"}
-        </DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-description">
-            If yes click agree button, if not choose the other one!
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose} className="bg-red-500 text-white">
-            Disagree
-          </Button>
-          <Button onClick={handleDelete} autoFocus>
-            Agree
-          </Button>
-        </DialogActions>
-      </Dialog>
     </>
   );
 };

@@ -13,7 +13,7 @@ import animationService from "../../../services/animation-service";
 import { useQueryClient } from "@tanstack/react-query";
 import { WallpaperDetail } from "../../../shared/types/wallpapers-type";
 import { Button } from "antd";
-import wallpaperService from "../../../services/wallpaperService";
+import wallpaperService from "../../../services/wallpaper-service";
 
 interface Props {
   isOpenEdit: boolean;
@@ -38,11 +38,7 @@ const ModalEditWallpaper: FC<Props> = ({
   setIsUpdateSuccess,
   wallpaperDetail,
 }: Props) => {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm();
+  const { register, handleSubmit } = useForm();
 
   const [avatarName, setAvatarName] = useState<string | undefined>(
     wallpaperDetail?.avatar.file_name
@@ -93,23 +89,18 @@ const ModalEditWallpaper: FC<Props> = ({
     setPreviewImageContent(URL.createObjectURL(file));
   };
 
-  const handleClickOpenPopup = () => {
-    setOpen(true);
-  };
-
-  const handleClosePopup = () => {
-    setOpen(false);
-  };
   const handleDelete = async () => {
     if (wallpaperDetail) {
-      console.log(wallpaperDetail.id);
-      
-      const res = await wallpaperService.deleteWallpapers(wallpaperDetail.id);
-      console.log(res);
-      if(res.status === 200){
-        handleClose();
-        alert("Delete success");
-        queryClient.invalidateQueries(["wallpapers"]);
+      try {
+        const res = await wallpaperService.deleteWallpapers(wallpaperDetail.id);
+
+        if (res.status === 200) {
+          handleClose();
+          alert("Delete success");
+          queryClient.invalidateQueries(["wallpapers"]);
+        }
+      } catch (error) {
+        alert("Delete fail!")
       }
     }
   };
@@ -201,7 +192,7 @@ const ModalEditWallpaper: FC<Props> = ({
                     <img
                       src={previewImageAvatar}
                       alt="Selected"
-                      className="h-full object-cover mb-2"
+                      className="h-full object-contain mb-2"
                     />
                   </div>
                 </div>
@@ -212,7 +203,7 @@ const ModalEditWallpaper: FC<Props> = ({
                     <img
                       src={previewImageContent}
                       alt="Selected"
-                      className="h-full object-cover mb-2"
+                      className="h-full object-contain mb-2"
                     />
                   </div>
                 </div>
@@ -223,7 +214,7 @@ const ModalEditWallpaper: FC<Props> = ({
               <button
                 type="button"
                 className="bg-red-500 text-white px-4 py-2 mr-4 rounded-md"
-                onClick={handleClickOpenPopup}
+                onClick={handleDelete}
               >
                 Delete
               </button>
@@ -244,29 +235,6 @@ const ModalEditWallpaper: FC<Props> = ({
           </form>
         </Box>
       </Modal>
-      <Dialog
-        open={open}
-        onClose={handleClosePopup}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <DialogTitle id="alert-dialog-title">
-          {"Are you sure want to delete this?"}
-        </DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-description">
-            If yes click agree button, if not choose the other one!
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose} className="bg-red-500 text-white">
-            Disagree
-          </Button>
-          <Button onClick={handleDelete} autoFocus>
-            Agree
-          </Button>
-        </DialogActions>
-      </Dialog>
     </>
   );
 };

@@ -6,19 +6,22 @@ import Dashboard from "./pages/dashboard";
 import Theme from "./pages/theme";
 import Animations from "./pages/animation";
 import Wallpapers from "./pages/wallpaper";
+import { AuthProvider } from "./shared/contexts/auth-context";
 
 function App() {
   return (
     <>
-      <Routes>
-        <Route path="/" element={<LoginForm />} />
-        <Route element={<Layout children={<Outlet />} />}>
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/theme" element={<Theme />} />
-          <Route path="/animation" element={<Animations />} />
-          <Route path="/wallpaper" element={<Wallpapers />} />
-        </Route>
-      </Routes>
+      <AuthProvider>
+        <Routes>
+          <Route path="/" element={<LoginForm />} />
+          <Route element={<Layout children={<Outlet />} />}>
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/theme" element={<Theme />} />
+            <Route path="/animation" element={<Animations />} />
+            <Route path="/wallpaper" element={<Wallpapers />} />
+          </Route>
+        </Routes>
+      </AuthProvider>
     </>
   );
 }

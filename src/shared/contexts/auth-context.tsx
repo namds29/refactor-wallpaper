@@ -3,7 +3,7 @@ import { useLocation } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
 import jwtDecode from "jwt-decode";
-import userService from "../../services/userService";
+import userService from "../../services/user-service";
 
 type Decode_Token = {
   id: number,

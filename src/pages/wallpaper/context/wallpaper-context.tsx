@@ -1,5 +1,4 @@
 import { createContext, useState, useEffect } from "react";
-import { Animations } from "../../../shared/types/animation-types";
 import { useFetchWallpapers } from "../../../hooks/useWallpaper";
 import { WallpaperDetail } from "../../../shared/types/wallpapers-type";
 
@@ -26,7 +25,7 @@ export const WallpaperProvider = ({
   const [wallpapers, setWallpapers] = useState<any[]>([]);
 
   useEffect(() => {
-    if (!isLoading) setWallpapers(data.data);
+    if (!isLoading) setWallpapers(data?.data.data);
   }, [isLoading, data]);
   useEffect(() => {}, [wallpapers]);
   return (

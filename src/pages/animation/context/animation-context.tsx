@@ -25,7 +25,7 @@ export const AnimationProvider = ({
   const [animations, setAnimations] = useState<Animations[]>([]);
 
   useEffect(() => {
-    if (!isLoading) setAnimations(data.data);
+    if (!isLoading) setAnimations(data?.data.data);
   }, [isLoading, data]);
   useEffect(() => {}, [animations]);
   return (

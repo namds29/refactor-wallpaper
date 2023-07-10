@@ -1,11 +1,12 @@
-import { useState } from "react";
-import { useNavigation } from "react-router-dom";
-import userService from "../../services/userService";
+import { useContext, useState } from "react";
+import userService from "../../services/user-service";
+import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../../shared/contexts/auth-context";
 
 const DropdownHeader = () => {
   const [isOpen, setIsOpen] = useState(false);
-  // const router = useNavigation()
-  const options = ["Sign out"];
+  const navigate = useNavigate();
+  const {token} = useContext(AuthContext);
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
@@ -13,7 +14,7 @@ const DropdownHeader = () => {
 
   const handleLogout = () => {
     userService.logout();
-    // router.push('/')
+    navigate('/')
   };
 
   return (
@@ -24,7 +25,7 @@ const DropdownHeader = () => {
           className="flex justify-between items-center px-4 py-2 text-sm font-medium rounded-md text-white bg-primary outline-none "
           onClick={toggleDropdown}
         >
-          Huy Hoàng Trần
+          {token}
           <svg
             className={`ml-2 w-5 h-5 transition-transform ${
               isOpen ? "transform rotate-180" : ""
