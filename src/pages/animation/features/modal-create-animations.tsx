@@ -26,12 +26,10 @@ const ModalCreateAnimation: FC<Props> = ({
   handleClose,
   setIsCreateSuccess,
 }: Props) => {
-  const {
-    register,
-    handleSubmit,
-  } = useForm();
+  const { register, handleSubmit } = useForm();
   const [avatar, setAvatar] = useState<File | null>(null);
   const [content, setContent] = useState<File | null>(null);
+  const [video, setVideo] = useState<any>();
   const [isLoading, setIsLoading] = useState(false);
   const [previewImageAvatar, setPreviewImageAvatar] = useState<string | null>(
     null
@@ -61,8 +59,17 @@ const ModalCreateAnimation: FC<Props> = ({
   };
   const handlePhotoAvatarChange = (e: any) => {
     const file = e.target.files[0];
-    setAvatar(file);
-    setPreviewImageAvatar(URL.createObjectURL(file));
+    console.log(file.type);
+    if (file.type === "video/mp4") {
+      const url = URL.createObjectURL(file);
+      setVideo(url);
+      setPreviewImageAvatar(null);
+      setAvatar(null)
+    } else {
+      setVideo(null);
+      setAvatar(file);
+      setPreviewImageAvatar(URL.createObjectURL(file));
+    }
   };
   const handlePhotoContentChange = (e: any) => {
     const file = e.target.files[0];
@@ -141,6 +148,16 @@ const ModalCreateAnimation: FC<Props> = ({
             </div>
           </div>
           <div className="flex gap-5">
+            {video && (
+              <div className="mb-6 w-1/2">
+                <div className="relative flex justify-center w-full h-96 bg-gray-200 rounded">
+                  <video style={{ height: "inherit" }} controls>
+                    <source src={video} type="video/mp4" />
+                  </video>
+                </div>
+              </div>
+            )}
+
             {previewImageAvatar && (
               <div className="mb-6 w-1/2">
                 <div className="relative w-full h-96 bg-gray-200 rounded">

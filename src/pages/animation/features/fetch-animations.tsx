@@ -12,6 +12,7 @@ const FetchAnimations: FC<Props> = ({}) => {
   const [animationDetail, setAnimationDetail] = useState<
     AnimationDetail | undefined
   >();
+  console.log(animations);
   const [isCreateSuccess, setIsUpdateSuccess] = useState(false);
 
   const handleClose = () => setIsOpenEdit(false);
@@ -37,17 +38,23 @@ const FetchAnimations: FC<Props> = ({}) => {
                   className="relative w-full h-80 cursor-pointer"
                   onClick={() => handleEdit(item)}
                 >
-                  <img
-                    src={item.avatar.path}
-                    alt="Pic 1"
-                    style={{
-                      width: "100%",
-                      objectFit: "contain",
-                      background: 'black',
-                      borderRadius: 5,
-                      height: "100%",
-                    }}
-                  />
+                  {item.avatar.mimetype === "video/mp4" ? (
+                    <video style={{ height: "inherit" }} controls>
+                      <source src={item.avatar.path} type="video/mp4" />
+                    </video>
+                  ) : (
+                    <img
+                      src={item.avatar.path}
+                      alt="Pic 1"
+                      style={{
+                        width: "100%",
+                        objectFit: "contain",
+                        background: "black",
+                        borderRadius: 5,
+                        height: "100%",
+                      }}
+                    />
+                  )}
                 </div>
                 <div className="flex justify-between mt-4 mb-2">
                   <p className="whitespace-nowrap overflow-hidden overflow-ellipsis w-24">

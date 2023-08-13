@@ -7,7 +7,7 @@ import {
   DialogContentText,
   DialogTitle,
 } from "@mui/material";
-import { Dispatch, FC, SetStateAction, useState } from "react";
+import { Dispatch, FC, SetStateAction, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import animationService from "../../../services/animation-service";
 import { useQueryClient } from "@tanstack/react-query";
@@ -38,20 +38,20 @@ const ModalEditAnimation: FC<Props> = ({
   animationDetail,
 }: Props) => {
   const { register, handleSubmit } = useForm();
-
   const [open, setOpen] = useState(false);
-  const [avatarName, setAvatarName] = useState<string | undefined>(
+  const [avatarName, setAvatarName] = useState<string | undefined | null>(
     animationDetail?.avatar.file_name
   );
   const [contentName, setContentName] = useState<string | undefined>(
     animationDetail?.contentFile.file_name
   );
   const [previewImageAvatar, setPreviewImageAvatar] = useState<
-    string | undefined
+    string | undefined | null
   >(animationDetail?.avatar.path);
   const [previewImageContent, setPreviewImageContent] = useState<
     string | undefined
   >(animationDetail?.contentFile.path);
+  const [video, setVideo] = useState<any>(animationDetail?.avatar.path);
   const queryClient = useQueryClient();
 
   const onSubmit = async (data: any) => {
@@ -81,9 +81,17 @@ const ModalEditAnimation: FC<Props> = ({
   };
   const handlePhotoAvatarChange = (e: any) => {
     const file = e.target.files[0];
-
-    setAvatarName(file.name);
-    setPreviewImageAvatar(URL.createObjectURL(file));
+    if (file.type === "video/mp4") {
+      const url = URL.createObjectURL(file);
+      setVideo(url);
+      setPreviewImageAvatar(null);
+      setAvatarName(null)
+    } else {
+      setVideo(null);
+      setAvatarName(file.name);
+      console.log(file)
+      setPreviewImageAvatar(URL.createObjectURL(file));
+    }
   };
   const handlePhotoContentChange = (e: any) => {
     const file = e.target.files[0];
@@ -106,7 +114,11 @@ const ModalEditAnimation: FC<Props> = ({
       }
     }
   };
-
+  useEffect(()=>{
+    if(animationDetail?.avatar.mimetype == 'video/mp4'){
+      setPreviewImageAvatar(null)
+    }
+  },[])
   return (
     <>
       <Modal
@@ -189,7 +201,16 @@ const ModalEditAnimation: FC<Props> = ({
               </div>
             </div>
             <div className="flex gap-5">
-              {previewImageAvatar && (
+            {video && (
+              <div className="mb-6 w-1/2">
+                <div className="relative flex justify-center w-full h-96 bg-gray-200 rounded">
+                  <video style={{ height: "inherit" }} controls>
+                    <source src={video} type="video/mp4" />
+                  </video>
+                </div>
+              </div>
+            )}
+              { previewImageAvatar && (
                 <div className="mb-6 w-1/2">
                   <div className="relative w-full h-96 bg-gray-200 rounded">
                     <img
